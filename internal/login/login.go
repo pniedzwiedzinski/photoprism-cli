@@ -5,11 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/pniedzwiedzinski/photoprism-cli/internal/api"
+	"github.com/pniedzwiedzinski/photoprism-cli/internal/utils"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/crypto/ssh/terminal"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"syscall"
 )
 
@@ -31,14 +31,9 @@ func parseResponse(resp string) (string, error) {
 }
 
 func saveToken(token string) {
-	myself, err := user.Current()
-	if err != nil {
-		panic(err)
-	}
-	homedir := myself.HomeDir
-	dir := homedir + "/.photoprism/"
+	dir := utils.GetTokenLocation()
 	file := dir + "token.txt"
-	err = os.MkdirAll(dir, 0777)
+	err := os.MkdirAll(dir, 0777)
 	if err != nil {
 		panic(err)
 	}

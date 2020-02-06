@@ -2,11 +2,12 @@ package api
 
 import (
 	"bytes"
+	"github.com/pniedzwiedzinski/photoprism-cli/internal/utils"
 	"io/ioutil"
 	"net/http"
 )
 
-// API bla ble Comment
+// API - communicate with photoprism api
 type API struct {
 	url   string
 	token string
@@ -15,13 +16,34 @@ type API struct {
 // NewAPI constructor
 func NewAPI(ip string) API {
 	url := "http://" + ip + ":2342/api/v1/"
-	token := ""
-	return API{url: url, token: token}
+	tokenFile := utils.GetTokenLocation() + "token.txt"
+	data, err := ioutil.ReadFile(tokenFile)
+	if err != nil {
+		return API{url: url, token: ""}
+	}
+	return API{url: url, token: string(data)}
+}
+
+func (a API) doRequest(method string, url string, body string) (*http.Response, error) {
+	client := http.Client{}
+	req, err := http.NewRequest(method, a.url+url, bytes.NewBuffer([]byte(body)))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("X-Session-Token", a.token)
+	if method == "POST" {
+		req.Header.Set("Content-Type", "application/json")
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 // Get
 func (a API) Get(url string) (string, error) {
-	resp, err := http.Get(url)
+	resp, err := a.doRequest("GET", url, "")
 	if err != nil {
 		return "", err
 	}
@@ -35,7 +57,7 @@ func (a API) Get(url string) (string, error) {
 
 // Post
 func (a API) Post(url string, body string) (string, error) {
-	resp, err := http.Post(a.url+url, "application/json", bytes.NewBuffer([]byte(body)))
+	resp, err := a.doRequest("POST", url, body)
 	if err != nil {
 		return "", err
 	}
