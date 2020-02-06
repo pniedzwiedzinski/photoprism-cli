@@ -35,8 +35,8 @@ func (a API) Get(url string) string {
 }
 
 // Post
-func (a API) Post(url string, body []byte) string {
-	resp, err := http.Post(a.url+url, "application/json", bytes.NewBuffer(body))
+func (a API) Post(url string, body string) string {
+	resp, err := http.Post(a.url+url, "application/json", bytes.NewBuffer([]byte(body)))
 	if err != nil {
 		fmt.Println(err)
 	}

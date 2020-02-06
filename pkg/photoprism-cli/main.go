@@ -32,7 +32,7 @@ func loginCommand(c *cli.Context) error {
 	}
 	ip := c.Args().Get(0)
 	password := login.GetPassword()
-	body := []byte(fmt.Sprintf("{\"email\": \"admin\", \"password\": \"%d\"}", password))
+	body := fmt.Sprintf("{\"email\": \"admin\", \"password\": \"%s\"}", password)
 
 	a := api.NewAPI(ip)
 	resp := a.Post("session", body)
