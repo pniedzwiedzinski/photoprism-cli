@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/pniedzwiedzinski/photoprism-cli/internal/login"
 	"github.com/urfave/cli/v2"
 	"log"
@@ -19,6 +20,7 @@ func main() {
 
 	err := app.Run(os.Args)
 	if err != nil {
+		fmt.Println("An error occurred:")
 		log.Fatal(err)
 	}
 }
