@@ -3,8 +3,11 @@ package api
 import (
 	"bytes"
 	"github.com/pniedzwiedzinski/photoprism-cli/internal/utils"
+	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
+	"os"
 )
 
 // API - communicate with photoprism api
@@ -40,6 +43,11 @@ func (a API) doRequest(method string, url string, body string) (*http.Response, 
 		return nil, err
 	}
 	return resp, nil
+}
+
+// GetToken - return current session token
+func (a API) GetToken() string {
+	return a.token
 }
 
 // Get - GET HTTP request to `http://server:2342/api/v1/{url}`
