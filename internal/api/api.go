@@ -2,7 +2,6 @@ package api
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -21,29 +20,29 @@ func NewAPI(ip string) API {
 }
 
 // Get
-func (a API) Get(url string) string {
+func (a API) Get(url string) (string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 	defer resp.Body.Close()
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
-	return string(b)
+	return string(b), nil
 }
 
 // Post
-func (a API) Post(url string, body string) string {
+func (a API) Post(url string, body string) (string, error) {
 	resp, err := http.Post(a.url+url, "application/json", bytes.NewBuffer([]byte(body)))
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 	defer resp.Body.Close()
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
-	return string(b)
+	return string(b), nil
 }

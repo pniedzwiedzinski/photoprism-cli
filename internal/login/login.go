@@ -61,15 +61,17 @@ func getPassword() string {
 // LoginCommand
 func Command(c *cli.Context) error {
 	if c.NArg() == 0 {
-		fmt.Println(fmt.Errorf("You need to pass server IP: photoprism-cli login [IP]"))
-		return nil
+		return fmt.Errorf("You need to pass server IP: photoprism-cli login [IP]")
 	}
 	ip := c.Args().Get(0)
 	password := getPassword()
-	body := fmt.Sprintf("{\"email\": \"admin\", \"password\": \"%s\"}", password)
+	body := fmt.Sprintf(`{"email": "admin", "password": "%s"}`, password)
 
 	a := api.NewAPI(ip)
-	resp := a.Post("session", body)
+	resp, err := a.Post("session", body)
+	if err != nil {
+		return err
+	}
 	token, err := parseResponse(resp)
 	if err != nil {
 		return err
