@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/pniedzwiedzinski/photoprism-cli/internal/login"
+	"github.com/pniedzwiedzinski/photoprism-cli/internal/commands"
 	"github.com/urfave/cli/v2"
 	"log"
 	"os"
@@ -10,12 +10,7 @@ import (
 
 func main() {
 	app := &cli.App{
-		Commands: []*cli.Command{
-			{
-				Name:   "login",
-				Action: login.Command,
-			},
-		},
+		Commands: commands.Commands,
 	}
 
 	err := app.Run(os.Args)
