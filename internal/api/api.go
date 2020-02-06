@@ -24,6 +24,7 @@ func NewAPI(ip string) API {
 	return API{url: url, token: string(data)}
 }
 
+// Create http.Request, add token, and send to the url with body
 func (a API) doRequest(method string, url string, body string) (*http.Response, error) {
 	client := http.Client{}
 	req, err := http.NewRequest(method, a.url+url, bytes.NewBuffer([]byte(body)))
@@ -41,7 +42,7 @@ func (a API) doRequest(method string, url string, body string) (*http.Response, 
 	return resp, nil
 }
 
-// Get
+// Get - GET HTTP request to `http://server:2342/api/v1/{url}`
 func (a API) Get(url string) (string, error) {
 	resp, err := a.doRequest("GET", url, "")
 	if err != nil {
@@ -55,7 +56,7 @@ func (a API) Get(url string) (string, error) {
 	return string(b), nil
 }
 
-// Post
+// Post - POST HTTP request to `http://server:2342/api/v1/{url}` with body
 func (a API) Post(url string, body string) (string, error) {
 	resp, err := a.doRequest("POST", url, body)
 	if err != nil {
